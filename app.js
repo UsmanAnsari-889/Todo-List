@@ -1,79 +1,114 @@
-// console.log("JavaScript Connected!");
+console.log("Connected");
 
-// // step 1 : get html elements
+var taskInput = document.getElementById("taskInput");
+var addBtn = document.getElementById("addBtn");
+var taskLists = document.getElementById("taskLists");
+var totalTasks = document.getElementById("totalTasks");
+var completedTasks = document.getElementById("completedTasks");
 
-// var taskInput = document.getElementById("taskInput");
-// var addBtn = document.getElementById("addBtn");
-// var taskList = document.getElementById("taskList");
-// var totalTasks = document.getElementById("totalTasks");
-// var completedTasks = document.getElementById("completedTasks");
+addBtn.onclick = function () {
+  var taskValue = taskInput.value.trim();
 
-// // step 2 : add button par event chalana!
+  if (taskValue === "") {
+    alert("Please enter a task to execute");
+  } else {
+    var li = document.createElement("li");
+    var icon = document.createElement("i");
+    var taskText = document.createElement("span");
 
-// addBtn.onclick = function () {
-//   var taskValue = taskInput.value;
-//   // console.log(taskValue);
+    icon.setAttribute("class", "fa-regular fa-circle");
+    icon.style.cursor = "pointer";
 
-//   if (taskValue === "") {
-//     alert("Please Enter a task!");
-//   } else {
-//     var li = document.createElement("li");
-//     var taskText = document.createElement("span");
+    taskText.innerText = taskValue;
+    taskText.setAttribute("class", "task-text");
 
-//     taskText.innerText = taskValue;
-//     taskText.className = "task-text";
+    var status = document.createElement("span");
+    var statusIcon = document.createElement("i");
+    var statusText = document.createElement("span");
 
-//     // console.log(taskText);
+    status.setAttribute("class", "status");
+    status.style.backgroundColor = "rgba(7, 104, 231, 0.3)";
+    statusIcon.setAttribute("class", "fa-regular fa-clock");
+    statusIcon.style.color = "rgb(7, 104, 231)";
+    statusIcon.style.cursor = "pointer";
+    statusText.innerText = "Pending";
+    statusText.style.color = "rgb(7, 104, 231)";
+    statusText.style.fontSize = "14px";
 
-//     taskText.onclick = function () {
-//       if (taskText.style.textDecoration === "line-through") {
-//         taskText.style.textDecoration = "none";
-//         taskText.style.color = "black";
-//       } else {
-//         taskText.style.textDecoration = "line-through";
-//         taskText.style.color = "gray";
-//       }
+    var deleteBtn = document.createElement("button");
+    var deleteIcon = document.createElement("i");
 
-//       updateCount();
-//     };
+    deleteBtn.type = "button";
+    deleteBtn.setAttribute("class", "delete-btn");
+    deleteIcon.setAttribute("class", "fa-solid fa-trash-can");
+    deleteIcon.style.color = "white";
+    deleteIcon.style.cursor = "pointer";
 
-//     var deleteBtn = document.createElement("button");
-//     deleteBtn.innerText = "Delete";
+    li.appendChild(icon);
+    li.appendChild(taskText);
+    status.appendChild(statusIcon);
+    status.appendChild(statusText);
+    li.appendChild(status);
+    deleteBtn.appendChild(deleteIcon);
+    li.appendChild(deleteBtn);
+    taskLists.appendChild(li);
 
-//     deleteBtn.className = "delete-btn";
+    taskInput.value = "";
 
-//     deleteBtn.onclick = function () {
-//       taskList.removeChild(li);
-//       updateCount();
-//     };
+    updateCount();
+    icon.onclick = function () {
+      if (statusText.innerText === "Pending") {
+        li.style.backgroundColor = "rgba(0, 128, 0, 0.1)";
 
-//     li.appendChild(taskText);
-//     li.appendChild(deleteBtn);
+        icon.setAttribute("class", "fa-solid fa-circle-check");
+        icon.style.color = "green";
 
-//     taskList.appendChild(li);
+        taskText.style.color = "gray";
+        taskText.style.textDecoration = "line-through";
 
-//     taskInput.value = "";
+        status.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        statusIcon.setAttribute("class", "fa-solid fa-circle-check");
+        statusIcon.style.color = "white";
 
-//     updateCount();
-//   }
-// };
+        statusText.innerText = "Completed";
+        statusText.style.color = "white";
+      } else {
+        li.style.backgroundColor = "";
 
-// // step 3 : task counter ka function
+        icon.setAttribute("class", "fa-regular fa-circle");
+        icon.style.color = "";
 
-// function updateCount() {
-//   var allTasks = taskList.getElementsByTagName("li");
+        taskText.style.color = "";
+        taskText.style.textDecoration = "none";
+        status.style.backgroundColor = "rgba(7, 104, 231, 0.3)";
+        statusIcon.setAttribute("class", "fa-regular fa-clock");
+        statusIcon.style.color = "rgb(7, 104, 231)";
 
-//   totalTasks.innerText = allTasks.length;
+        statusText.innerText = "Pending";
+        statusText.style.color = "rgb(7, 104, 231)";
+      }
+      updateCount();
+    };
 
-//   var completed = 0;
+    deleteBtn.onclick = function () {
+      taskLists.removeChild(li);
+      updateCount();
+    };
+  }
+};
 
-//   for (var i = 0; i < allTasks.length; i++) {
-//     var task = allTasks[i].getElementsByTagName("span")[0];
+function updateCount() {
+  var allTasks = taskLists.getElementsByTagName("li");
 
-//     if (task.style.textDecoration === "line-through") {
-//       completed++;
-//     }
-//   }
+  var completed = 0;
 
-//   completedTasks.innerText = completed;
-// }
+  for (var i = 0; i < allTasks.length; i++) {
+    var task = allTasks[i].querySelector(".task-text");
+    if (task.style.textDecoration === "line-through") {
+      completed++;
+    }
+  }
+
+  document.querySelector("#totalTasks span").innerText = allTasks.length;
+  document.querySelector("#completedTasks span").innerText = completed;
+}
